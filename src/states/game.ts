@@ -2,19 +2,18 @@ import 'pixi';
 import 'p2';
 import Phaser from 'phaser-ce';
 
-import {Sound} from '../helpers/sound';
 import {Mushroom} from '../prefabs/mushroom';
 
 export class Game extends Phaser.State {
     private mushroom: Phaser.Sprite;
     private cursors: Phaser.CursorKeys;
-    private text: Phaser.BitmapText;
+    private text: Phaser.Text;
     private spaceKey: Phaser.Key;
 
     public create(): void {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.text = this.game.add.bitmapText(this.game.world.centerX, this.game.world.centerY + 100, 'font', 'Press Arrows / Space', 15);
+        this.text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 100, 'Press Arrows / Space', {fill: 'white'});
         this.text.x = this.text.x - ~~(this.text.width * 0.5);
 
         this.mushroom = new Mushroom(this.game, this.game.world.centerX, this.game.world.centerY);
@@ -24,7 +23,6 @@ export class Game extends Phaser.State {
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {
-            Sound.play();
             this.mushroom.x = this.game.world.centerX;
             this.mushroom.y = this.game.world.centerY;
         }, this);
