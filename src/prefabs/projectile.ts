@@ -5,7 +5,7 @@ export class Projectile extends Phaser.Sprite
     constructor(game: Phaser.Game, initPosition : Phaser.Point, 
         direction : Phaser.Point, speed : number) 
     {
-      super(game, initPosition.x, initPosition.y, "projectile");  
+      super(game, initPosition.x, initPosition.y, 'projectile');  
 
       this.anchor.setTo(0.5);
       this.game.physics.arcade.enableBody(this);
