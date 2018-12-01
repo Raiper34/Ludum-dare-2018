@@ -7,11 +7,15 @@ import {Background} from '../prefabs/background';
 import {City} from '../prefabs/city';
 import {Projectile} from '../prefabs/projectile';
 import { Wind } from '../prefabs/wind';
+import { Human } from '../prefabs/human';
+import { CollisionManager } from '../prefabs/collisionManager';
 
 export class Game extends Phaser.State {
     private mushroom: Mushroom;
+    private collisionManager : CollisionManager;
     private projectile : Projectile;
     private wind : Wind;
+    private testHuman : Human;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
 
@@ -23,16 +27,18 @@ export class Game extends Phaser.State {
         this.initializeWorld();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity = new Phaser.Point(0.0, 100);
+        this.collisionManager = new CollisionManager(this.game);
 
         this.mushroom = new Mushroom(this.game, 100, 100);
         this.game.add.existing(this.mushroom);
 
         this.wind = new Wind(0, 150);
+        this.testHuman = new Human(10.0, 'projectile');
 
-        this.projectile = new Projectile(this.game, this.wind, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
+        this.projectile = new Projectile(this.game, this.wind, this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
         this.game.add.existing(this.projectile);
         this.game.camera.follow(this.projectile);
-
+        this.collisionManager.add(this.projectile);
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -41,6 +47,7 @@ export class Game extends Phaser.State {
 
     public update(): void {
         this.game.input.update();
+        this.collisionManager.update();
 
         if (this.cursors.down.isDown) {
             this.mushroom.y += 5;
