@@ -24,5 +24,7 @@ export class Preload extends Phaser.State {
         {
             this.game.load.image('cloud_' + i, 'assets/sprites/cloud' + i + '.png');
         }
+
+        this.game.load.image('wallTile', 'assets/sprites/wallTile.png');
     }
 }

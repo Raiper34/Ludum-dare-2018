@@ -10,6 +10,7 @@ import {Human} from '../prefabs/human';
 import {CollisionManager} from '../prefabs/collisionManager';
 import {Player} from '../prefabs/player.enum';
 import { Cloud } from '../prefabs/cloud';
+import { WallTile } from '../prefabs/wallTile';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
@@ -17,6 +18,7 @@ export class Game extends Phaser.State {
     private wind : Wind;
     private humans : Array<Human>;
     private clouds : Array<Cloud>;
+    private wallTiles : Array<WallTile>;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
 
@@ -58,13 +60,24 @@ export class Game extends Phaser.State {
         this.game.add.existing(this.projectile);
         this.collisionManager.add(this.projectile);
 
+        this.wallTiles = new Array<WallTile>();
+        this.wallTiles.push(new WallTile(this.game, 400, 500));
+        this.game.add.existing(this.wallTiles[this.wallTiles.length - 1]);
+        this.collisionManager.add(this.wallTiles[this.wallTiles.length - 1]);
+        this.wallTiles.push(new WallTile(this.game, 400, 700));
+        this.game.add.existing(this.wallTiles[this.wallTiles.length - 1]);
+        this.collisionManager.add(this.wallTiles[this.wallTiles.length - 1]);
+
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {
-            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
-            this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
-            this.game.camera.follow(this.projectile);
-            this.activePlayerInControl = false;
+            if(this.activePlayerInControl)
+            {
+                let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
+                this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
+                this.game.camera.follow(this.projectile);
+                this.activePlayerInControl = false;
+            }
         }, this);
     }
 
