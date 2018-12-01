@@ -7,6 +7,7 @@ export class Projectile extends CollisionObject
 {
     private wind : Wind;
     private human : Human;
+    private scaleSpeed : number = 0.75;
     
     public onExplodeCallback : Phaser.Signal;
     public onFireCallback : Phaser.Signal;
@@ -25,6 +26,8 @@ export class Projectile extends CollisionObject
       this.events.onKilled.add(this.onKilled, this);
 
       this.setObjectState(false);
+      this.scale.x = 0;
+      this.scale.y = 0;
     }
 
     update() : void
@@ -35,6 +38,8 @@ export class Projectile extends CollisionObject
         this.body.velocity.y += (this.wind.directionStrength.y * this.game.time.physicsElapsed) / this.human.weight;
 
         this.rotation += Math.PI * this.game.time.physicsElapsed;
+        this.scale.x = Phaser.Math.clamp(this.scale.x + this.scaleSpeed * this.game.time.physicsElapsed, 0.0, 1.0);
+        this.scale.y = Phaser.Math.clamp(this.scale.y + this.scaleSpeed * this.game.time.physicsElapsed, 0.0, 1.0);
 
         if(this.y > this.game.world.bounds.bottom)
         {
@@ -51,7 +56,9 @@ export class Projectile extends CollisionObject
     public explode() : void
     {
         this.setObjectState(false);
-
+        this.scale.x = 0;
+        this.scale.y = 0;
+        
         if(this.onExplodeCallback != null)
         {
             this.onExplodeCallback.dispatch();
