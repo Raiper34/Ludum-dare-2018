@@ -14,7 +14,7 @@ export class Projectile extends CollisionObject
 
     constructor(game: Phaser.Game, wind: Wind) 
     {
-      super(game, 0, 0, 'projectile');  // Default sprite used at the beginning
+      super(game, 0, 0, ''); // Sprite type is not important now
 
       this.wind = wind;
 
@@ -69,6 +69,7 @@ export class Projectile extends CollisionObject
     {
         this.human = human;
         this.key = human.spriteKey;
+        this.loadTexture(this.key);
         this.x = initPosition.x;
         this.y = initPosition.y;
         this.body.velocity = direction.normalize().multiply(speed, speed);

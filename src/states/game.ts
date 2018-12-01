@@ -14,7 +14,7 @@ export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
     private projectile : Projectile;
     private wind : Wind;
-    private testHuman : Human;
+    private humans : Array<Human>;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
 
@@ -30,7 +30,11 @@ export class Game extends Phaser.State {
         this.collisionManager = new CollisionManager(this.game);
 
         this.wind = new Wind(0, 150);
-        this.testHuman = new Human(10.0, 'projectile');
+
+        this.humans = new Array<Human>();
+        this.humans.push(new Human(10.0, 'human_light'));
+        this.humans.push(new Human(20.0, 'human_medium'));
+        this.humans.push(new Human(30.0, 'human_heavy'));
 
         this.projectile = new Projectile(this.game, this.wind);
         this.projectile.onExplodeCallback = new Phaser.Signal();
@@ -66,7 +70,8 @@ export class Game extends Phaser.State {
             this.cities[this.activePlayer].cannon.rotateRight();
         }
         if (this.game.input.keyboard.isDown(Phaser.KeyCode.F)) {
-            this.cities[this.activePlayer].cannon.fire(this.testHuman, this.projectile);
+            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
+            this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
             this.game.camera.follow(this.projectile);
         }
 
