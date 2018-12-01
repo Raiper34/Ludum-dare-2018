@@ -28,7 +28,8 @@ export class City extends Phaser.Sprite {
     }
 
     public prepareCity(): void {
-        this.cannon = new Cannon(this.game, this.x, this.y, this.playerNumber);
+        const cannonOffsetY = 100;
+        this.cannon = new Cannon(this.game, this.x, this.y + cannonOffsetY, this.playerNumber);
         this.game.add.existing(this.cannon);
 
         const textOffset = 150;

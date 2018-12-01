@@ -20,6 +20,7 @@ export class Game extends Phaser.State {
 
     private background: Background;
     private cities: City[] = [];
+    private changeTurnText: Phaser.Text;
 
     private activePlayer: Player = Player.one;
     private activePlayerInControl : boolean = true;
@@ -39,31 +40,29 @@ export class Game extends Phaser.State {
 
         this.projectile = new Projectile(this.game, this.wind);
         this.projectile.onExplodeCallback = new Phaser.Signal();
-        this.projectile.onExplodeCallback.add(() => {this.changePlayer()}, true);
+        this.projectile.onExplodeCallback.add(() => {{
+            this.changePlayer();
+            this.game.camera.shake(0.05, 100);
+        }}, true);
         this.game.add.existing(this.projectile);
         this.collisionManager.add(this.projectile);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        this.spaceKey.onDown.add(() => {this.changePlayer()}, this);
+        this.spaceKey.onDown.add(() => {
+            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
+            this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
+            this.game.camera.follow(this.projectile);
+            this.activePlayerInControl = false;
+        }, this);
     }
 
     public update(): void {
         this.game.input.update();
         this.collisionManager.update();
-
         if(this.activePlayerInControl)
         {
             this.controlCannon();
-        }
-
-        if(this.projectile.visible)
-        {
-            this.game.camera.follow(this.projectile);
-        }
-        else
-        {
-           this.game.camera.follow(this.cities[this.activePlayer]);
         }
     }
 
@@ -73,12 +72,6 @@ export class Game extends Phaser.State {
         }
         if (this.cursors.right.isDown) {
             this.cities[this.activePlayer].cannon.rotateRight();
-        }
-        if (this.game.input.keyboard.isDown(Phaser.KeyCode.F)) {
-            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
-            this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
-            this.game.camera.follow(this.projectile);
-            this.activePlayerInControl = false;
         }
     }
 
@@ -101,12 +94,26 @@ export class Game extends Phaser.State {
         this.cities[Player.two].prepareCity();
 
         this.camera.follow(this.cities[this.activePlayer]);
+
+        this.changeTurnText = this.game.add.text(0,0);
+        this.changeTurnText.fixedToCamera = true;
+        this.changeTurnText.cameraOffset.setTo(this.game.world.camera.width / 2, this.game.world.camera.height / 2);
+        this.changeTurnText.anchor.setTo(0.5);
     }
 
-    changePlayer(): void {
+    private changePlayer(): void {
         this.activePlayer = this.activePlayer === Player.one ? Player.two : Player.one;
         this.activePlayerInControl = true;
-        this.camera.follow(this.cities[this.activePlayer]);
+        this.camera.follow(this.cities[this.activePlayer], 0, 0.05, 0.05);
         this.cities[this.activePlayer].cannon.setDefaultAngle();
+        this.showChangePlayerText();
+        console.log(this.game.world.camera.height);
+        console.log(this.game.world.camera.width);
+    }
+
+    private showChangePlayerText(): void {
+        this.changeTurnText.alpha = 1;
+        this.changeTurnText.text = `Player ${this.activePlayer + 1} turn!`;
+        this.game.add.tween(this.changeTurnText).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0);
     }
 }
