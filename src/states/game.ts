@@ -31,7 +31,6 @@ export class Game extends Phaser.State {
 
         this.mushroom = new Mushroom(this.game, 100, 100);
         this.game.add.existing(this.mushroom);
-        this.collisionManager.add(this.mushroom);
 
         this.wind = new Wind(0, 150);
         this.testHuman = new Human(10.0, 'projectile');
@@ -39,9 +38,9 @@ export class Game extends Phaser.State {
         this.projectile = new Projectile(this.game, this.wind);
         this.game.add.existing(this.projectile);
         this.collisionManager.add(this.projectile);
-        
+
         this.projectile.fire(this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
-        
+
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {}, this);
@@ -82,7 +81,8 @@ export class Game extends Phaser.State {
 
     public render(): void {
         //this.game.debug.cameraInfo(this.game.camera, 32, 32);
-        this.game.debug.spriteInfo(this.mushroom, 32, 32);
+        this.game.debug.spriteInfo(this.mushroom, 300, 300);
+        //this.game.debug.spriteInfo(this.player1City.cannon, 32, 32);
     }
 
     private initializeWorld(): void {
@@ -92,8 +92,9 @@ export class Game extends Phaser.State {
 
         this.player1City = new City(this.game, 0, this.background.getBounds().bottom / 2, 1);
         this.game.add.existing(this.player1City);
+        this.player1City.initializeCannon();
 
-        this.player2City = new City(this.game, this.background.getBounds().right, 0, 2);
+        this.player2City = new City(this.game, this.background.getBounds().right, this.background.getBounds().bottom / 2, 2);
         this.game.add.existing(this.player2City);
     }
 }
