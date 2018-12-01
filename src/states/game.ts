@@ -22,6 +22,7 @@ export class Game extends Phaser.State {
     private cities: City[] = [];
 
     private activePlayer: Player = Player.one;
+    private activePlayerInControl : boolean = true;
 
     public create(): void {
         this.initializeWorld();
@@ -50,7 +51,11 @@ export class Game extends Phaser.State {
     public update(): void {
         this.game.input.update();
         this.collisionManager.update();
-        this.controlCannon();
+
+        if(this.activePlayerInControl)
+        {
+            this.controlCannon();
+        }
 
         if(this.projectile.visible)
         {
@@ -73,9 +78,8 @@ export class Game extends Phaser.State {
             let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
             this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
             this.game.camera.follow(this.projectile);
+            this.activePlayerInControl = false;
         }
-
-
     }
 
     public render(): void {
@@ -101,6 +105,7 @@ export class Game extends Phaser.State {
 
     changePlayer(): void {
         this.activePlayer = this.activePlayer === Player.one ? Player.two : Player.one;
+        this.activePlayerInControl = true;
         this.camera.follow(this.cities[this.activePlayer]);
         this.cities[this.activePlayer].cannon.setDefaultAngle();
     }
