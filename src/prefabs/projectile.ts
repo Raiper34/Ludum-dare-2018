@@ -32,6 +32,11 @@ export class Projectile extends CollisionObject
         this.body.velocity.y += (this.wind.directionStrength.y * this.game.time.physicsElapsed) / this.human.weight;
 
         this.rotation += Math.PI * this.game.time.physicsElapsed;
+
+        if(this.y > this.game.world.bounds.bottom)
+        {
+            this.explode();
+        }
     }
 
     private setObjectState(state : boolean) : void
