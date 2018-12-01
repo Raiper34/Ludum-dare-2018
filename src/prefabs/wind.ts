@@ -19,8 +19,9 @@ export class Wind
     {
         const direction = 
             new Phaser.Point(Math.random() < 0.5 ? -1.0 : 1.0, 0.0);
-        const strength = Math.random() * (this.maxStrength - this.minStrength) + this.minStrength;
+        const strength = Phaser.Math.random(this.minStrength, this.maxStrength);
         
         this.directionStrength = direction.multiply(strength, strength);
+        console.log(this.directionStrength);
     }
 }

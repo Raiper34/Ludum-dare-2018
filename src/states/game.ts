@@ -9,12 +9,14 @@ import {Wind} from '../prefabs/wind';
 import {Human} from '../prefabs/human';
 import {CollisionManager} from '../prefabs/collisionManager';
 import {Player} from '../prefabs/player.enum';
+import { Cloud } from '../prefabs/cloud';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
     private projectile : Projectile;
     private wind : Wind;
     private humans : Array<Human>;
+    private clouds : Array<Cloud>;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
 
@@ -37,6 +39,14 @@ export class Game extends Phaser.State {
         this.humans.push(new Human(10.0, 'human_light'));
         this.humans.push(new Human(20.0, 'human_medium'));
         this.humans.push(new Human(30.0, 'human_heavy'));
+
+        this.clouds = new Array<Cloud>();
+        for(let i : number = 0; i < 30; ++i) // TODO Fix this magic constant
+        {
+            this.clouds.push(new Cloud(this.game, this.wind, this.background.getBounds().top, this.background.getBounds().bottom * 0.75));
+            console.log(this.background.getBounds().top, this.background.getBounds().bottom / 2);
+            this.game.add.existing(this.clouds[this.clouds.length - 1]);
+        }
 
         this.projectile = new Projectile(this.game, this.wind);
         this.projectile.onExplodeCallback = new Phaser.Signal();
@@ -106,9 +116,8 @@ export class Game extends Phaser.State {
         this.activePlayerInControl = true;
         this.camera.follow(this.cities[this.activePlayer], 0, 0.05, 0.05);
         this.cities[this.activePlayer].cannon.setDefaultAngle();
+        this.wind.computeNewDirection();
         this.showChangePlayerText();
-        console.log(this.game.world.camera.height);
-        console.log(this.game.world.camera.width);
     }
 
     private showChangePlayerText(): void {
