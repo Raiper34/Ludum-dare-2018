@@ -1,6 +1,8 @@
 import Phaser from 'phaser-ce';
 import {Cannon} from './cannon';
+import {Human} from '../prefabs/human';
 import {player} from './player.enum';
+import {Projectile} from '../prefabs/projectile';
 
 const INITIAL_PEOPLE_COUNT = 1000;
 
@@ -33,6 +35,11 @@ export class City extends Phaser.Sprite {
         this.peopleCountText = this.game.add.text(this.x, this.y - textOffset, ``);
         this.peopleCountText.anchor.set(0.5);
         this.setPeopleCount(INITIAL_PEOPLE_COUNT);
+    }
+
+    public updateCity(human : Human, projectile : Projectile) : void
+    {
+        this.cannon.updateAim(human, projectile);
     }
 
     public setPeopleCount(peopleCount: number): void {

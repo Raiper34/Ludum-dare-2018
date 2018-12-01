@@ -55,10 +55,7 @@ export class Game extends Phaser.State {
            this.game.camera.y = this.cities[this.activePlayer].y;
         }
 
-        if(this.game.input.keyboard.isDown(Phaser.KeyCode.F))
-        {
-            this.projectile.fire(this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
-        }
+        this.cities[this.activePlayer].updateCity(this.testHuman, this.projectile);
     }
 
     public render(): void {
