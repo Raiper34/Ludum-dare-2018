@@ -33,6 +33,8 @@ export class Game extends Phaser.State {
         this.testHuman = new Human(10.0, 'projectile');
 
         this.projectile = new Projectile(this.game, this.wind);
+        this.projectile.onExplodeCallback = new Phaser.Signal();
+        this.projectile.onExplodeCallback.add(() => {this.changePlayer()}, true);
         this.game.add.existing(this.projectile);
         this.collisionManager.add(this.projectile);
 
