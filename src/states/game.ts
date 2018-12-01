@@ -52,7 +52,7 @@ export class Game extends Phaser.State {
 
         if(this.projectile.visible)
         {
-            this.game.camera.follow(this.projectile);
+            this.game.camera.follow(this.player2City);
         }
         else
         {
@@ -96,5 +96,6 @@ export class Game extends Phaser.State {
 
         this.player2City = new City(this.game, this.background.getBounds().right, this.background.getBounds().bottom / 2, 2);
         this.game.add.existing(this.player2City);
+        this.player2City.initializeCannon();
     }
 }
