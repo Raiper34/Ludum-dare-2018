@@ -7,6 +7,9 @@ export class Projectile extends CollisionObject
 {
     private wind : Wind;
     private human : Human;
+    
+    public onExplodeCallback : Phaser.Signal;
+    public onFireCallback : Phaser.Signal;
 
     constructor(game: Phaser.Game, wind: Wind) 
     {
@@ -48,6 +51,11 @@ export class Projectile extends CollisionObject
     public explode() : void
     {
         this.setObjectState(false);
+
+        if(this.onExplodeCallback != null)
+        {
+            this.onExplodeCallback.dispatch();
+        }
     }
 
     public fire(human : Human, initPosition : Phaser.Point, direction : Phaser.Point, speed : number)
@@ -59,6 +67,11 @@ export class Projectile extends CollisionObject
         this.body.velocity = direction.normalize().multiply(speed, speed);
 
         this.setObjectState(true);
+
+        if(this.onFireCallback != null)
+        {
+            this.onFireCallback.dispatch();
+        }
     }
 
     public onKilled() : void
