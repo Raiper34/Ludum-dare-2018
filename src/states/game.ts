@@ -2,7 +2,6 @@ import 'pixi';
 import 'p2';
 import Phaser from 'phaser-ce';
 
-import {Mushroom} from '../prefabs/mushroom';
 import {Background} from '../prefabs/background';
 import {City} from '../prefabs/city';
 import {Projectile} from '../prefabs/projectile';
@@ -12,7 +11,6 @@ import {CollisionManager} from '../prefabs/collisionManager';
 import {player} from '../prefabs/player.enum';
 
 export class Game extends Phaser.State {
-    private mushroom: Mushroom;
     private collisionManager : CollisionManager;
     private projectile : Projectile;
     private wind : Wind;
@@ -30,10 +28,6 @@ export class Game extends Phaser.State {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity = new Phaser.Point(0.0, 100);
         this.collisionManager = new CollisionManager(this.game);
-
-        this.mushroom = new Mushroom(this.game, 100, 100);
-        this.game.add.existing(this.mushroom);
-        this.collisionManager.add(this.mushroom);
 
         this.wind = new Wind(0, 150);
         this.testHuman = new Human(10.0, 'projectile');
@@ -53,36 +47,22 @@ export class Game extends Phaser.State {
 
         if(this.projectile.visible)
         {
-            this.game.camera.follow(this.cities[this.activePlayer]);
+            this.game.camera.follow(this.projectile);
         }
         else
         {
-           this.game.camera.x = this.player1City.x;
-           this.game.camera.y = this.player1City.y;
+           this.game.camera.x = this.cities[this.activePlayer].x;
+           this.game.camera.y = this.cities[this.activePlayer].y;
         }
 
         if(this.game.input.keyboard.isDown(Phaser.KeyCode.F))
         {
             this.projectile.fire(this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
         }
-
-        if (this.cursors.down.isDown) {
-            this.mushroom.y += 5;
-        }
-        if (this.cursors.up.isDown) {
-            this.mushroom.y -= 5;
-        }
-        if (this.cursors.left.isDown) {
-            this.mushroom.x -= 5;
-        }
-        if (this.cursors.right.isDown) {
-            this.mushroom.x += 5;
-        }
     }
 
     public render(): void {
         //this.game.debug.cameraInfo(this.game.camera, 32, 32);
-        this.game.debug.spriteInfo(this.mushroom, 300, 300);
         //this.game.debug.spriteInfo(this.player1City.cannon, 32, 32);
     }
 
