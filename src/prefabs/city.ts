@@ -12,6 +12,6 @@ export class City extends Phaser.Sprite {
         const anchorY = this.playerNumber === 2 ? 1 : 0;
         this.anchor.setTo(0, anchorY);
         this.game.physics.arcade.enableBody(this);
-        this.checkWorldBounds = true;
+        this.body.allowGravity = false;
     }
 }
