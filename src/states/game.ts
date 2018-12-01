@@ -8,9 +8,11 @@ import {City} from '../prefabs/city';
 import {Projectile} from '../prefabs/projectile';
 import { Wind } from '../prefabs/wind';
 import { Human } from '../prefabs/human';
+import { CollisionManager } from '../prefabs/collisionManager';
 
 export class Game extends Phaser.State {
     private mushroom: Phaser.Sprite;
+    private collisionManager : CollisionManager;
     private projectile : Projectile;
     private wind : Wind;
     private testHuman : Human;
@@ -25,6 +27,7 @@ export class Game extends Phaser.State {
     public create(): void {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity = new Phaser.Point(0.0, 100);
+        this.collisionManager = new CollisionManager(this.game);
 
         this.text = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 100, 'Press Arrows / Space', {fill: 'white'});
         this.text.x = this.text.x - ~~(this.text.width * 0.5);
@@ -37,7 +40,7 @@ export class Game extends Phaser.State {
 
         this.projectile = new Projectile(this.game, this.wind, this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
         this.game.add.existing(this.projectile);
-
+        this.collisionManager.add(this.projectile);
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -50,6 +53,7 @@ export class Game extends Phaser.State {
 
     public update(): void {
         this.game.input.update();
+        this.collisionManager.update();
 
         if (this.cursors.down.isDown) {
             this.game.camera.y += 5;
