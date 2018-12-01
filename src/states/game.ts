@@ -31,6 +31,7 @@ export class Game extends Phaser.State {
 
         this.mushroom = new Mushroom(this.game, 100, 100);
         this.game.add.existing(this.mushroom);
+        this.collisionManager.add(this.mushroom);
 
         this.wind = new Wind(0, 150);
         this.testHuman = new Human(10.0, 'projectile');
