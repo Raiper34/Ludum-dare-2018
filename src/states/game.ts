@@ -22,6 +22,7 @@ export class Game extends Phaser.State {
 
     private background: Background;
     private cities: City[] = [];
+    private cloudBackground: Phaser.TileSprite;
     private changeTurnText: Phaser.Text;
 
     private activePlayer: Player = Player.one;
@@ -68,6 +69,7 @@ export class Game extends Phaser.State {
     }
 
     public update(): void {
+        this.cloudBackground.tilePosition.x += this.activePlayer === Player.two ? 3 : -3;
         this.game.input.update();
         this.collisionManager.update();
         if(this.activePlayerInControl)
@@ -109,6 +111,8 @@ export class Game extends Phaser.State {
         this.changeTurnText.fixedToCamera = true;
         this.changeTurnText.cameraOffset.setTo(this.game.world.camera.width / 2, this.game.world.camera.height / 2);
         this.changeTurnText.anchor.setTo(0.5);
+
+        this.cloudBackground = this.game.add.tileSprite(0, 0, this.background.getBounds().right, this.game.world.camera.height, 'cloud_background');
     }
 
     private changePlayer(): void {
