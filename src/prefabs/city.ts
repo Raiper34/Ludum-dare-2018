@@ -1,16 +1,17 @@
 import Phaser from 'phaser-ce';
 
 export class City extends Phaser.Sprite {
-    constructor(game: Phaser.Game, x: number, y: number) {
-        super(game, x, y, 'city');
 
-        this.anchor.setTo(0.5);
-        this.game.physics.arcade.enableBody(this);
-        this.checkWorldBounds = true;
-        this.body.collideWorldBounds = true;
+    constructor(game: Phaser.Game, x: number, y: number,
+                private playerNumber: number) {
+        super(game, x, y, 'city');
+        this.initialize();
     }
 
-    update() {
-        this.angle += 1;
+    initialize(): void {
+        const anchorY = this.playerNumber === 2 ? 1 : 0;
+        this.anchor.setTo(0, anchorY);
+        this.game.physics.arcade.enableBody(this);
+        this.checkWorldBounds = true;
     }
 }

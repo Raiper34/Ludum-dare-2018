@@ -1,6 +1,6 @@
 import Phaser from 'phaser-ce';
 
-export class City extends Phaser.Sprite {
+export class Cannon extends Phaser.Sprite {
     constructor(game: Phaser.Game, x: number, y: number) {
         super(game, x, y, 'canon');
 
