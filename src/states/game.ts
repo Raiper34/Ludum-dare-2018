@@ -8,7 +8,7 @@ import {Projectile} from '../prefabs/projectile';
 import {Wind} from '../prefabs/wind';
 import {Human} from '../prefabs/human';
 import {CollisionManager} from '../prefabs/collisionManager';
-import {player} from '../prefabs/player.enum';
+import {Player} from '../prefabs/player.enum';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
@@ -21,7 +21,7 @@ export class Game extends Phaser.State {
     private background: Background;
     private cities: City[] = [];
 
-    private activePlayer: player = player.one;
+    private activePlayer: Player = Player.one;
 
     public create(): void {
         this.initializeWorld();
@@ -44,6 +44,7 @@ export class Game extends Phaser.State {
     public update(): void {
         this.game.input.update();
         this.collisionManager.update();
+        this.controlCannon();
 
         if(this.projectile.visible)
         {
@@ -51,11 +52,23 @@ export class Game extends Phaser.State {
         }
         else
         {
-           this.game.camera.x = this.cities[this.activePlayer].x;
-           this.game.camera.y = this.cities[this.activePlayer].y;
+           this.game.camera.follow(this.cities[this.activePlayer]);
+        }
+    }
+
+    private controlCannon(): void {
+        if (this.cursors.left.isDown) {
+            this.cities[this.activePlayer].cannon.rotateLeft();
+        }
+        if (this.cursors.right.isDown) {
+            this.cities[this.activePlayer].cannon.rotateRight();
+        }
+        if (this.game.input.keyboard.isDown(Phaser.KeyCode.F)) {
+            this.cities[this.activePlayer].cannon.fire(this.testHuman, this.projectile);
+            this.game.camera.follow(this.projectile);
         }
 
-        this.cities[this.activePlayer].updateCity(this.testHuman, this.projectile);
+
     }
 
     public render(): void {
@@ -68,17 +81,19 @@ export class Game extends Phaser.State {
         this.game.add.existing(this.background);
         this.game.world.setBounds(0, 0, this.background.getBounds().right, this.background.getBounds().bottom);
 
-        this.cities[player.one] = new City(this.game, 0, this.background.getBounds().bottom / 2, player.one);
-        this.game.add.existing(this.cities[player.one]);
-        this.cities[player.one].prepareCity();
+        this.cities[Player.one] = new City(this.game, 0, this.background.getBounds().bottom / 2, Player.one);
+        this.game.add.existing(this.cities[Player.one]);
+        this.cities[Player.one].prepareCity();
 
-        this.cities[player.two] = new City(this.game, this.background.getBounds().right, this.background.getBounds().bottom / 2, player.two);
-        this.game.add.existing(this.cities[player.two]);
-        this.cities[player.two].prepareCity();
+        this.cities[Player.two] = new City(this.game, this.background.getBounds().right, this.background.getBounds().bottom / 2, Player.two);
+        this.game.add.existing(this.cities[Player.two]);
+        this.cities[Player.two].prepareCity();
+
+        this.camera.follow(this.cities[this.activePlayer]);
     }
 
     changePlayer(): void {
-        this.activePlayer = this.activePlayer === player.one ? player.two : player.one;
+        this.activePlayer = this.activePlayer === Player.one ? Player.two : Player.one;
         this.camera.follow(this.cities[this.activePlayer]);
         this.cities[this.activePlayer].cannon.setDefaultAngle();
     }
