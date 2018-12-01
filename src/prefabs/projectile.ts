@@ -93,6 +93,11 @@ export class Projectile extends CollisionObject
         
         console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
 
+        if(sprite2.key.toString().toLowerCase().includes('walltile'))
+        {
+            sprite2.destroy();
+        }
+
         this.explode();
     }
 }

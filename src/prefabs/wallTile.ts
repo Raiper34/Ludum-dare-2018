@@ -3,18 +3,12 @@ import { CollisionObject } from './collisionObject';
 
 export class WallTile extends CollisionObject
 {
-    constructor(game: Phaser.Game, x : number, y : number)
+    constructor(game: Phaser.Game, x : number, y : number, allowGravity : boolean = true)
     {
         super(game, x, y, 'wallTile');
 
         this.checkWorldBounds = true;
         this.body.collideWorldBounds = true;
-        this.body.allowGravity = true;
-    }
-
-    protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
-    {
-        console.log("wall died!");
-        //this.destroy();
+        this.body.allowGravity = allowGravity;
     }
 }

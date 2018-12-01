@@ -61,12 +61,15 @@ export class Game extends Phaser.State {
         this.collisionManager.add(this.projectile);
 
         this.wallTiles = new Array<WallTile>();
-        this.wallTiles.push(new WallTile(this.game, 400, 500));
-        this.game.add.existing(this.wallTiles[this.wallTiles.length - 1]);
-        this.collisionManager.add(this.wallTiles[this.wallTiles.length - 1]);
-        this.wallTiles.push(new WallTile(this.game, 400, 700));
-        this.game.add.existing(this.wallTiles[this.wallTiles.length - 1]);
-        this.collisionManager.add(this.wallTiles[this.wallTiles.length - 1]);
+        for(let i : number = 0; i < 5; ++i)
+        {
+            this.wallTiles = this.wallTiles.concat(this.createWallTower(500, this.background.getBounds().right - 500, 500, 640, 3, 6));
+        }
+
+        this.wallTiles.forEach(element => {
+            this.game.add.existing(element);
+            this.collisionManager.add(element);
+        });
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -89,6 +92,23 @@ export class Game extends Phaser.State {
         {
             this.controlCannon();
         }
+    }
+
+    private createWallTower(minX : number, maxX : number, minY : number, maxY : number, minTiles : number, maxTiles : number) : Array<WallTile>
+    {
+        let tower : Array<WallTile> = new Array<WallTile>();
+        let count : number = Math.floor(Phaser.Math.random(minTiles, maxTiles));
+        let xPos = Phaser.Math.random(minX, maxX);
+        let yPos = Phaser.Math.random(minY, maxY);
+
+        let spriteHeight : number = 0;
+        for(let i : number = 0; i < count; ++i)
+        {
+            tower.push(new WallTile(this.game, xPos, yPos - i * spriteHeight, i != 0));
+            spriteHeight = tower[0].height;
+        }
+
+        return tower;
     }
 
     private controlCannon(): void {
