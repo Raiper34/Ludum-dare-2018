@@ -22,16 +22,27 @@ export class Projectile extends CollisionObject
       this.body.collideWorldBounds = false;
       this.body.allowGravity = true;
       this.body.velocity = direction.normalize().multiply(speed, speed);
+
+      this.events.onKilled.add(this.onKilled, this);
     }
 
-    update()
+    update() : void
     {
         this.body.velocity.x += (this.wind.directionStrength.x * this.game.time.physicsElapsed) / this.human.weight;
         this.body.velocity.y += (this.wind.directionStrength.y * this.game.time.physicsElapsed) / this.human.weight;
+
+        this.rotation += Math.PI * this.game.time.physicsElapsed;
     }
 
-    public onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
+    public onKilled() : void
+    {
+        console.log("KILLED");
+    }
+
+    protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
         console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
+
+        this.kill();
     }
 }

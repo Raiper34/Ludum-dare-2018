@@ -11,7 +11,7 @@ export abstract class CollisionObject extends Phaser.Sprite
         this.body.onCollide.add(this.onCollisionEnter, this);
     }
 
-    public onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
+    protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
         
     }
