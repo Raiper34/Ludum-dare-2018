@@ -33,6 +33,7 @@ export class Game extends Phaser.State {
 
         this.mushroom = new Mushroom(this.game, 100, 100);
         this.game.add.existing(this.mushroom);
+        this.collisionManager.add(this.mushroom);
 
         this.wind = new Wind(0, 150);
         this.testHuman = new Human(10.0, 'projectile');
@@ -40,8 +41,6 @@ export class Game extends Phaser.State {
         this.projectile = new Projectile(this.game, this.wind);
         this.game.add.existing(this.projectile);
         this.collisionManager.add(this.projectile);
-
-        this.projectile.fire(this.testHuman, new Phaser.Point(0, this.game.world.centerY), new Phaser.Point(1.0, -1.0), 150.0);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -58,8 +57,8 @@ export class Game extends Phaser.State {
         }
         else
         {
-           // this.game.camera.x = this.player1City.x;
-           // this.game.camera.y = this.player1City.y;
+           this.game.camera.x = this.player1City.x;
+           this.game.camera.y = this.player1City.y;
         }
 
         if(this.game.input.keyboard.isDown(Phaser.KeyCode.F))

@@ -20,21 +20,29 @@ export class Projectile extends CollisionObject
       this.body.allowGravity = true;
 
       this.events.onKilled.add(this.onKilled, this);
+
+      this.setObjectState(false);
     }
 
     update() : void
     {
+        if(!this.visible) { return; }
+        
         this.body.velocity.x += (this.wind.directionStrength.x * this.game.time.physicsElapsed) / this.human.weight;
         this.body.velocity.y += (this.wind.directionStrength.y * this.game.time.physicsElapsed) / this.human.weight;
 
         this.rotation += Math.PI * this.game.time.physicsElapsed;
     }
 
+    private setObjectState(state : boolean) : void
+    {
+        this.visible = state;
+        this.alive = state;
+    }
+
     public explode() : void
     {
-        this.visible = false;
-        this.alive = false;
-        this.visible = false;
+        this.setObjectState(false);
     }
 
     public fire(human : Human, initPosition : Phaser.Point, direction : Phaser.Point, speed : number)
@@ -45,9 +53,7 @@ export class Projectile extends CollisionObject
         this.y = initPosition.y;
         this.body.velocity = direction.normalize().multiply(speed, speed);
 
-        this.visible = true;
-        this.alive = true;
-        this.visible = true;
+        this.setObjectState(true);
     }
 
     public onKilled() : void
@@ -57,6 +63,8 @@ export class Projectile extends CollisionObject
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
+        if(!this.visible) { return; }
+        
         console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
 
         this.explode();
