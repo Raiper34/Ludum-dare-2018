@@ -8,7 +8,6 @@ import {Projectile} from '../prefabs/projectile';
 import {Wind} from '../prefabs/wind';
 import {Human} from '../prefabs/human';
 import {CollisionManager} from '../prefabs/collisionManager';
-import {Player} from '../prefabs/player.enum';
 import { Cloud } from '../prefabs/cloud';
 import { WallTile } from '../prefabs/wallTile';
 import { Enemy } from '../prefabs/enemy';
@@ -26,12 +25,9 @@ export class Game extends Phaser.State {
     private spaceKey: Phaser.Key;
 
     private background: Background;
-    private cities: City[] = [];
+    private city : City;
     private cloudBackground: Phaser.TileSprite;
     private changeTurnText: Phaser.Text;
-
-    private activePlayer: Player = Player.one;
-    private activePlayerInControl : boolean = true;
 
     public create(): void {
         this.initializeWorld();
@@ -50,14 +46,12 @@ export class Game extends Phaser.State {
         for(let i : number = 0; i < 30; ++i) // TODO Fix this magic constant
         {
             this.clouds.push(new Cloud(this.game, this.wind, this.background.getBounds().top, this.background.getBounds().bottom * 0.75));
-            console.log(this.background.getBounds().top, this.background.getBounds().bottom / 2);
             this.game.add.existing(this.clouds[this.clouds.length - 1]);
         }
 
         this.projectile = new Projectile(this.game, this.wind);
         this.projectile.onExplodeCallback = new Phaser.Signal();
         this.projectile.onExplodeCallback.add(() => {{
-            this.changePlayer();
             this.game.camera.shake(0.05, 100);
         }}, true);
         this.game.add.existing(this.projectile);
@@ -75,35 +69,28 @@ export class Game extends Phaser.State {
         });*/
 
         this.enemySpawners = new Array<EnemySpawner>();
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 700, 600, 2.0, this.cities[0].position));
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, -200, 400, 2.0, this.cities[0].position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 700, 600, 2.0, this.city.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, -200, 400, 2.0, this.city.position));
         
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {
-            if(this.activePlayerInControl)
-            {
-                let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
-                this.cities[this.activePlayer].cannon.fire(this.humans[humanIdx], this.projectile);
-                this.game.camera.follow(this.projectile);
-                this.activePlayerInControl = false;
-            }
+            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
+            this.city.cannon.fire(this.humans[humanIdx], this.projectile);
+            //this.game.camera.follow(this.projectile);
         }, this);
     }
 
     public update(): void {
-        this.cloudBackground.tilePosition.x += this.activePlayer === Player.two ? 3 : -3;
+        this.cloudBackground.tilePosition.x -= 3;
         this.game.input.update();
         this.collisionManager.update();
         this.enemySpawners.forEach(element => {
             element.update();
         });
 
-        if(this.activePlayerInControl)
-        {
-            this.controlCannon();
-        }
+        this.controlCannon();
     }
 
     private createWallTower(minX : number, maxX : number, minY : number, maxY : number, minTiles : number, maxTiles : number) : Array<WallTile>
@@ -125,10 +112,10 @@ export class Game extends Phaser.State {
 
     private controlCannon(): void {
         if (this.cursors.left.isDown) {
-            this.cities[this.activePlayer].cannon.rotateLeft();
+            this.city.cannon.rotateLeft();
         }
         if (this.cursors.right.isDown) {
-            this.cities[this.activePlayer].cannon.rotateRight();
+            this.city.cannon.rotateRight();
         }
     }
 
@@ -142,15 +129,11 @@ export class Game extends Phaser.State {
         this.game.add.existing(this.background);
         this.game.world.setBounds(0, 0, this.background.getBounds().right, this.background.getBounds().bottom);
 
-        this.cities[Player.one] = new City(this.game, 0, this.background.getBounds().bottom / 2, Player.one);
-        this.game.add.existing(this.cities[Player.one]);
-        this.cities[Player.one].prepareCity();
+        this.city = new City(this.game, 0, this.background.getBounds().bottom / 2);
+        this.game.add.existing(this.city);
+        this.city.prepareCity();
 
-        this.cities[Player.two] = new City(this.game, this.background.getBounds().right, this.background.getBounds().bottom / 2, Player.two);
-        this.game.add.existing(this.cities[Player.two]);
-        this.cities[Player.two].prepareCity();
-
-        this.camera.follow(this.cities[this.activePlayer]);
+        this.camera.follow(this.city);
 
         this.changeTurnText = this.game.add.text(0,0);
         this.changeTurnText.fixedToCamera = true;
@@ -158,20 +141,5 @@ export class Game extends Phaser.State {
         this.changeTurnText.anchor.setTo(0.5);
 
         this.cloudBackground = this.game.add.tileSprite(0, 0, this.background.getBounds().right, this.game.world.camera.height, 'cloud_background');
-    }
-
-    private changePlayer(): void {
-        this.activePlayer = this.activePlayer === Player.one ? Player.two : Player.one;
-        this.activePlayerInControl = true;
-        this.camera.follow(this.cities[this.activePlayer], 0, 0.05, 0.05);
-        this.cities[this.activePlayer].cannon.setDefaultAngle();
-        this.wind.computeNewDirection();
-        this.showChangePlayerText();
-    }
-
-    private showChangePlayerText(): void {
-        this.changeTurnText.alpha = 1;
-        this.changeTurnText.text = `Player ${this.activePlayer + 1} turn!`;
-        this.game.add.tween(this.changeTurnText).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0);
     }
 }

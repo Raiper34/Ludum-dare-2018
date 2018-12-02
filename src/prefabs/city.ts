@@ -1,6 +1,5 @@
 import Phaser from 'phaser-ce';
 import {Cannon} from './cannon';
-import {Player} from './player.enum';
 import {Human} from '../prefabs/human';
 import {Projectile} from '../prefabs/projectile';
 
@@ -12,14 +11,13 @@ export class City extends Phaser.Sprite {
     private peopleCount: number = INITIAL_PEOPLE_COUNT;
     private peopleCountText: Phaser.Text;
 
-    constructor(game: Phaser.Game, x: number, y: number,
-                private playerNumber: Player) {
+    constructor(game: Phaser.Game, x: number, y: number) {
         super(game, x, y, 'city');
         this.initialize();
     }
 
     private initialize(): void {
-        this.x += this.playerNumber === Player.two ? -this.width / 2 : this.width / 2;
+        this.x += this.width / 2;
         this.y += this.height / 2;
         this.anchor.setTo(0.5);
 
@@ -29,7 +27,7 @@ export class City extends Phaser.Sprite {
 
     public prepareCity(): void {
         const cannonOffsetY = 100;
-        this.cannon = new Cannon(this.game, this.x, this.y + cannonOffsetY, this.playerNumber);
+        this.cannon = new Cannon(this.game, this.x, this.y + cannonOffsetY);
         this.game.add.existing(this.cannon);
 
         const textOffset = 150;

@@ -22,6 +22,5 @@ export class Wind
         const strength = Phaser.Math.random(this.minStrength, this.maxStrength);
         
         this.directionStrength = direction.multiply(strength, strength);
-        console.log(this.directionStrength);
     }
 }
