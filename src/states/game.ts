@@ -13,6 +13,7 @@ import { WallTile } from '../prefabs/wallTile';
 import { Enemy } from '../prefabs/enemy';
 import { EnemySpawner } from '../prefabs/enemySpawner';
 import { ProjectileGenerator } from '../prefabs/projectileGenerator';
+import { Config } from '../config';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
@@ -57,8 +58,8 @@ export class Game extends Phaser.State {
         });*/
 
         this.enemySpawners = new Array<EnemySpawner>();
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 700, 600, 2.0, this.city.position));
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, -200, 400, 2.0, this.city.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, Config.gameWidth, 0, 2.0, this.city.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 0, 0, 2.0, this.city.position));
         
         this.projectileGen = new ProjectileGenerator(this.game, this.collisionManager, this.wind);
 
@@ -118,7 +119,7 @@ export class Game extends Phaser.State {
         this.game.add.existing(this.background);
         this.game.world.setBounds(0, 0, this.background.getBounds().right, this.background.getBounds().bottom);
 
-        this.city = new City(this.game, 0, this.background.getBounds().bottom / 2);
+        this.city = new City(this.game, Config.gameWidth / 2, this.background.getBounds().bottom / 2);
         this.game.add.existing(this.city);
         this.city.prepareCity();
 
@@ -130,5 +131,6 @@ export class Game extends Phaser.State {
         this.changeTurnText.anchor.setTo(0.5);
 
         this.cloudBackground = this.game.add.tileSprite(0, 0, this.background.getBounds().right, this.game.world.camera.height, 'cloud_background');
+        this.cloudBackground.tileScale.y = 2.0;
     }
 }
