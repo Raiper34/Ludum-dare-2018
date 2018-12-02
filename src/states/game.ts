@@ -12,12 +12,12 @@ import { Cloud } from '../prefabs/cloud';
 import { WallTile } from '../prefabs/wallTile';
 import { Enemy } from '../prefabs/enemy';
 import { EnemySpawner } from '../prefabs/enemySpawner';
+import { ProjectileGenerator } from '../prefabs/projectileGenerator';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
-    private projectile : Projectile;
     private wind : Wind;
-    private humans : Array<Human>;
+    private projectileGen : ProjectileGenerator;
     private clouds : Array<Cloud>;
     private wallTiles : Array<WallTile>;
     private enemySpawners : Array<EnemySpawner>;
@@ -37,11 +37,6 @@ export class Game extends Phaser.State {
 
         this.wind = new Wind(0, 150);
 
-        this.humans = new Array<Human>();
-        this.humans.push(new Human(10.0, 'human_light'));
-        this.humans.push(new Human(20.0, 'human_medium'));
-        this.humans.push(new Human(30.0, 'human_heavy'));
-
         this.clouds = new Array<Cloud>();
         for(let i : number = 0; i < 30; ++i) // TODO Fix this magic constant
         {
@@ -49,21 +44,14 @@ export class Game extends Phaser.State {
             this.game.add.existing(this.clouds[this.clouds.length - 1]);
         }
 
-        this.projectile = new Projectile(this.game, this.wind);
-        this.projectile.onExplodeCallback = new Phaser.Signal();
-        this.projectile.onExplodeCallback.add(() => {{
-            this.game.camera.shake(0.05, 100);
-        }}, true);
-        this.game.add.existing(this.projectile);
-        this.collisionManager.add(this.projectile);
-
+        /*
         this.wallTiles = new Array<WallTile>();
         for(let i : number = 0; i < 5; ++i)
         {
             this.wallTiles = this.wallTiles.concat(this.createWallTower(500, this.background.getBounds().right - 500, 500, 640, 3, 6));
         }
 
-        /*this.wallTiles.forEach(element => {
+        this.wallTiles.forEach(element => {
             this.game.add.existing(element);
             this.collisionManager.add(element);
         });*/
@@ -72,15 +60,16 @@ export class Game extends Phaser.State {
         this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 700, 600, 2.0, this.city.position));
         this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, -200, 400, 2.0, this.city.position));
         
+        this.projectileGen = new ProjectileGenerator(this.game, this.collisionManager, this.wind);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {
-            let humanIdx : number = Math.floor(Phaser.Math.random(0, this.humans.length));
-            this.city.cannon.fire(this.humans[humanIdx], this.projectile);
+            this.city.cannon.fire(this.projectileGen);
             //this.game.camera.follow(this.projectile);
         }, this);
     }
+    
 
     public update(): void {
         this.cloudBackground.tilePosition.x -= 3;

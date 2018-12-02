@@ -23,7 +23,7 @@ export class CollisionManager
             this.objects.forEach(x => {
                 if(element != x)
                 {
-                    this.game.physics.arcade.collide(element, x);
+                    this.game.physics.arcade.overlap(element, x);
                 }
             });
         });

@@ -16,13 +16,14 @@ export class Preload extends Phaser.State {
         this.game.load.image('background', 'assets/sprites/background.png');
         this.game.load.image('cloud_background', 'assets/sprites/cloudBackground.png');
 
-        this.game.load.image('human_light', 'assets/sprites/humanLight.png');
-        this.game.load.image('human_medium', 'assets/sprites/humanMedium.png');
-        this.game.load.image('human_heavy', 'assets/sprites/humanHeavy.png');
-
         for(let i : number = 1; i <= Config.cloudCount; ++i)
         {
             this.game.load.image('cloud_' + i, 'assets/sprites/cloud' + i + '.png');
+        }
+
+        for(let i : number = 1; i <= Config.humanCount; ++i)
+        {
+            this.game.load.image('human_' + i, 'assets/sprites/human' + i + '.png');
         }
 
         this.game.load.image('wallTile', 'assets/sprites/wallTile.png');

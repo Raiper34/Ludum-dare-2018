@@ -1,6 +1,7 @@
 import Phaser from 'phaser-ce';
 import {Human} from './human';
 import {Projectile} from './projectile';
+import { ProjectileGenerator } from './projectileGenerator';
 
 // NOTE Still ready for two players. No time to clean
 // ==================================================
@@ -49,7 +50,7 @@ export class Cannon extends Phaser.Sprite {
         }
     }
 
-    fire(human: Human, projectile: Projectile): void {
-        projectile.fire(human, new Phaser.Point(this.x, this.y), this.getAimDirection(), 500.0);
+    fire(projectileGenerator : ProjectileGenerator): void {
+        projectileGenerator.generateProjectile(this.x, this.y, this.getAimDirection(), 500.0);
     }
 }
