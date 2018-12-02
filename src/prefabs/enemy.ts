@@ -37,16 +37,28 @@ export class Enemy extends CollisionObject
     {
         if(sprite2 == null) { return; }
 
+        let shouldBeDestroyed : boolean = false;
+
         if(sprite2 instanceof Projectile)
         {
             ++PlayerInfo.score;
             let hitEffect = this.game.add.audio('enemyHitSound');
             hitEffect.playOnce = true;
             hitEffect.play();
-            this.destroy();
+
+            let emitter = this.game.add.emitter(this.x, this.y, 15);
+
+            emitter.makeParticles('explosion_small');
+            emitter.gravity = this.game.physics.arcade.gravity;
+            emitter.start(true, 0, null, 15);
+            this.game.time.events.add(5000, () => { emitter.destroy(); }, this);
+
+            shouldBeDestroyed = true;
+            
         }
         else if(sprite2 instanceof Cannon)
         {
+            // NOTE BAD CODE! If this is edited, projectile.onCollisionEnter should be as well
             this.game.camera.shake(0.02, 100);
             this.game.camera.flash(0xff0000, 500);
             PlayerInfo.causeDamage(this.playerDamage);
@@ -54,6 +66,11 @@ export class Enemy extends CollisionObject
             chEffect.playOnce = true;
             chEffect.play();
 
+            shouldBeDestroyed = true;
+        }
+
+        if(shouldBeDestroyed)
+        {
             this.destroy();
         }
     } 

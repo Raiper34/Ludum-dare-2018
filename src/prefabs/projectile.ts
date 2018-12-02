@@ -96,6 +96,7 @@ export class Projectile extends CollisionObject
         {
             if(this.body.velocity.y > 150)
             {
+                // NOTE BAD CODE! If this is edited, enemy.onCollisionEnter should be as well
                 this.game.camera.shake(0.02, 100);
                 this.game.camera.flash(0xff0000, 500);
                 PlayerInfo.causeDamage(this.playerDamage);

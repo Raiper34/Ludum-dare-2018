@@ -27,6 +27,7 @@ export class Preload extends Phaser.State {
         }
 
         this.game.load.image('wallTile', 'assets/sprites/wallTile.png');
+        this.game.load.image('explosion_small', 'assets/sprites/explosionSmall.png');
 
         this.game.load.bitmapFont('carrier_command', 
         'assets/fonts/carrier_command.png', 
