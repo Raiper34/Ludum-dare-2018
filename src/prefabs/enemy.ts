@@ -40,12 +40,20 @@ export class Enemy extends CollisionObject
         if(sprite2 instanceof Projectile)
         {
             ++PlayerInfo.score;
+            let hitEffect = this.game.add.audio('enemyHitSound');
+            hitEffect.playOnce = true;
+            hitEffect.play();
             this.destroy();
         }
         else if(sprite2 instanceof Cannon)
         {
             this.game.camera.shake(0.02, 100);
+            this.game.camera.flash(0xff0000, 500);
             PlayerInfo.causeDamage(this.playerDamage);
+            let chEffect = this.game.add.audio('cityHitEffect');
+            chEffect.playOnce = true;
+            chEffect.play();
+
             this.destroy();
         }
     } 

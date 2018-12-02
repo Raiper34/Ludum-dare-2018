@@ -21,7 +21,7 @@ export class CollisionManager
     {
         this.objects.forEach(element => {
             this.objects.forEach(x => {
-                if(element != x)
+                if(element != x && element != null)
                 {
                     this.game.physics.arcade.overlap(element, x)
                 }

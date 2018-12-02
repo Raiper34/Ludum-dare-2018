@@ -11,7 +11,7 @@ export class Projectile extends CollisionObject
 {
     private playerDamage : number = 1;
     private wind : Wind;
-    private scaleSpeed : number = 0.75;
+    private scaleSpeed : number = 1.25;
     
     public onExplodeCallback : Phaser.Signal;
     public onFireCallback : Phaser.Signal;
@@ -92,12 +92,19 @@ export class Projectile extends CollisionObject
 
 
         // TODO Replace magic constant for fast falling projectiles
-        if(sprite2 instanceof Cannon && this.body.velocity.y > 150)
+        if(sprite2 instanceof Cannon)
         {
-            this.game.camera.shake(0.02, 100);
-            PlayerInfo.causeDamage(this.playerDamage);
+            if(this.body.velocity.y > 150)
+            {
+                this.game.camera.shake(0.02, 100);
+                this.game.camera.flash(0xff0000, 500);
+                PlayerInfo.causeDamage(this.playerDamage);
+                let chEffect = this.game.add.audio('cityHitEffect');
+                chEffect.playOnce = true;
+                chEffect.play();
+            }
+            else { return; }
         }
-        else { return; }
 
         this.explode();
     }

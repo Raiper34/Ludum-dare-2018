@@ -64,8 +64,9 @@ export class Game extends Phaser.State {
         });*/
 
         this.enemySpawners = new Array<EnemySpawner>();
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, Config.gameWidth, 0, 2.0, this.city.cannon.position));
-        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 0, 0, 2.0, this.city.cannon.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, Config.gameWidth, -200, 2.0, this.city.cannon.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, 0, -200, 2.0, this.city.cannon.position));
+        this.enemySpawners.push(new EnemySpawner(this.game, this.collisionManager, this.game.world.centerX, -200, 2.0, this.city.cannon.position));
         
         this.projectileGen = new ProjectileGenerator(this.game, this.collisionManager, this.wind);
 
@@ -83,11 +84,17 @@ export class Game extends Phaser.State {
         this.scoreText.fixedToCamera = true;
 
         this.updateGUI();
+
+        // INIT SOUNDS
+        // ==========
+        let sirenSound = this.game.add.audio('sirenSound');
+        sirenSound.playOnce = true;
+        sirenSound.play();
     }
     
 
     public update(): void {
-        this.cloudBackground.tilePosition.x -= 3;
+        this.cloudBackground.tilePosition.x -= 1;
         this.game.input.update();
         this.collisionManager.update();
         this.enemySpawners.forEach(element => {

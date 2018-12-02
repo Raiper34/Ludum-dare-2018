@@ -32,6 +32,9 @@ export class Preload extends Phaser.State {
         'assets/fonts/carrier_command.png', 
         'assets/fonts/carrier_command.xml');
 
-        this.game.load.audio('fireEffect', 'assets/audio/fireSound.mp3');
+        this.game.load.audio('fireEffect', 'assets/audio/cannonFireSound.mp3');
+        this.game.load.audio('cityHitEffect', 'assets/audio/explosionCitySound.wav');
+        this.game.load.audio('enemyHitSound', 'assets/audio/enemyHitSound.wav');
+        this.game.load.audio('sirenSound', 'assets/audio/sirenSound.mp3');
     }
 }
