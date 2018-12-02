@@ -7,7 +7,7 @@ const DEFAULT_ANGLE = 0;
 const ROTATION_SPEED = 5;
 
 const ANGLE_LIMITS = [
-    {left: -90, right: 0},
+    {left: -179 + ROTATION_SPEED, right: ROTATION_SPEED},
     {left: -0, right: 90},
 ];
 

@@ -11,6 +11,7 @@ import {CollisionManager} from '../prefabs/collisionManager';
 import {Player} from '../prefabs/player.enum';
 import { Cloud } from '../prefabs/cloud';
 import { WallTile } from '../prefabs/wallTile';
+import { Enemy } from '../prefabs/enemy';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
@@ -19,6 +20,7 @@ export class Game extends Phaser.State {
     private humans : Array<Human>;
     private clouds : Array<Cloud>;
     private wallTiles : Array<WallTile>;
+    private testEnemy : Enemy;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
 
@@ -66,10 +68,14 @@ export class Game extends Phaser.State {
             this.wallTiles = this.wallTiles.concat(this.createWallTower(500, this.background.getBounds().right - 500, 500, 640, 3, 6));
         }
 
-        this.wallTiles.forEach(element => {
+        /*this.wallTiles.forEach(element => {
             this.game.add.existing(element);
             this.collisionManager.add(element);
-        });
+        });*/
+
+        this.testEnemy = new Enemy(this.game, 700, 600, this.cities[0].position, 150.0);
+        this.game.add.existing(this.testEnemy);
+        this.collisionManager.add(this.testEnemy);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
