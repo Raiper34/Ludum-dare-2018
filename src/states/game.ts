@@ -14,6 +14,7 @@ import { Enemy } from '../prefabs/enemy';
 import { EnemySpawner } from '../prefabs/enemySpawner';
 import { ProjectileGenerator } from '../prefabs/projectileGenerator';
 import { Config } from '../config';
+import { PlayerInfo } from '../playerInfo';
 
 export class Game extends Phaser.State {
     private collisionManager : CollisionManager;
@@ -32,6 +33,8 @@ export class Game extends Phaser.State {
 
     public create(): void {
         this.initializeWorld();
+
+        PlayerInfo.reset();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity = new Phaser.Point(0.0, 100);
         this.collisionManager = new CollisionManager(this.game);

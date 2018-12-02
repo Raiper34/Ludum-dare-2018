@@ -1,8 +1,11 @@
 import Phaser from 'phaser-ce';
 import { CollisionObject } from './collisionObject';
+import {Projectile} from '../prefabs/projectile';
+import { PlayerInfo } from '../playerInfo';
 
 export class Enemy extends CollisionObject
 {
+    private playerDamage : number = 2;
     private target : Phaser.Point;
     private speed : number;
     private distThreshold : number = 10.0;
@@ -29,7 +32,21 @@ export class Enemy extends CollisionObject
 
         if(Phaser.Math.distance(this.target.x, this.target.y, this.x, this.y) < this.distThreshold)
         {
+            PlayerInfo.causeDamage(this.playerDamage);
             this.destroy();
         }
     }
+
+    protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
+    {
+        if(sprite2 == null) { return; }
+
+        if(sprite2 instanceof Projectile)
+        {
+            ++PlayerInfo.score;
+
+            console.log(PlayerInfo.score);
+        }
+    } 
+
 }

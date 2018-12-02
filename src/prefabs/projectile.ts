@@ -81,7 +81,7 @@ export class Projectile extends CollisionObject
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
-        if(!this.visible || sprite2 == null || sprite1 == null) { return; }
+        if(!this.visible || sprite2 == null || sprite1 == null || sprite2 instanceof Projectile) { return; }
         
         console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
 
