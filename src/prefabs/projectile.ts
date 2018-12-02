@@ -14,7 +14,7 @@ export class Projectile extends CollisionObject
 
     constructor(game: Phaser.Game, wind: Wind, initPosition : Phaser.Point, direction : Phaser.Point, speed : number) 
     {
-      super(game, initPosition.x, initPosition.y, 'human_' + Math.floor(Phaser.Math.random(1, Config.humanCount)));
+      super(game, initPosition.x, initPosition.y, 'human_' + Math.floor(Phaser.Math.random(1, Config.humanCount + 1)));
 
       this.wind = wind;
 
@@ -81,7 +81,7 @@ export class Projectile extends CollisionObject
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
-        if(!this.visible) { return; }
+        if(!this.visible || sprite2 == null || sprite1 == null) { return; }
         
         console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
 

@@ -7,8 +7,12 @@ export abstract class CollisionObject extends Phaser.Sprite
         super(game, x, y, key);
 
         this.game.physics.arcade.enableBody(this);
+        
         this.body.onCollide = new Phaser.Signal();
+        this.body.onOverlap = new Phaser.Signal();
+
         this.body.onCollide.add(this.onCollisionEnter, this);
+        this.body.onOverlap.add(this.onCollisionEnter, this);
     }
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
