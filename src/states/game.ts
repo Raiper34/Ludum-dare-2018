@@ -72,7 +72,9 @@ export class Game extends Phaser.State {
         this.spaceKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.spaceKey.onDown.add(() => {
             this.city.cannon.fire(this.projectileGen);
-            //this.game.camera.follow(this.projectile);
+            let fireEffect = this.game.add.audio('fireEffect');
+            fireEffect.playOnce = true;
+            fireEffect.play();
         }, this);
  
 

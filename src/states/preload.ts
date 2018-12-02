@@ -31,5 +31,7 @@ export class Preload extends Phaser.State {
         this.game.load.bitmapFont('carrier_command', 
         'assets/fonts/carrier_command.png', 
         'assets/fonts/carrier_command.xml');
+
+        this.game.load.audio('fireEffect', 'assets/audio/fireSound.mp3');
     }
 }

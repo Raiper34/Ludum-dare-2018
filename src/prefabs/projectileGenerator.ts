@@ -22,7 +22,7 @@ export class ProjectileGenerator
         
         newProjectile.onExplodeCallback = new Phaser.Signal();
         newProjectile.onExplodeCallback.add(() => {{
-            this.game.camera.shake(0.02, 50);
+            this.game.camera.shake(0.01, 50);
         }}, true);
         
         this.game.add.existing(newProjectile);
