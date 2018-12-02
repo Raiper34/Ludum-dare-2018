@@ -4,9 +4,11 @@ import { Enemy } from './enemy';
 
 export class EnemySpawner
 {
-    private minSpeed : number = 150.0;
-    private maxSpeed : number = 250.0;
-    
+    private minSpeed : number = 100.0;
+    private maxSpeed : number = 125.0;
+    private endMaxSpeed : number = 200.0;
+    private speedIncreaseStep : number = 1;
+
     private game : Phaser.Game;
     private collManager : CollisionManager;
     private target : Phaser.Point;
@@ -35,6 +37,12 @@ export class EnemySpawner
             this.collManager.add(newEnemy);
 
             this.lastTime = this.game.time.totalElapsedSeconds();
+
+            if(this.maxSpeed < this.endMaxSpeed)
+            {
+                this.minSpeed += this.speedIncreaseStep;
+                this.maxSpeed += this.speedIncreaseStep;
+            }
         }
     }
 }

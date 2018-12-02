@@ -88,7 +88,8 @@ export class Game extends Phaser.State {
         // INIT SOUNDS
         // ==========
         let sirenSound = this.game.add.audio('sirenSound');
-        sirenSound.playOnce = true;
+        sirenSound.loop = true;
+        sirenSound.playOnce = false;
         sirenSound.play();
     }
     
