@@ -3,9 +3,13 @@ import { Wind } from './wind';
 import { Human } from './human';
 import { CollisionObject } from './collisionObject';
 import { Config } from '../config';
+import { Cannon } from './cannon';
+import { PlayerInfo } from '../playerInfo';
+import { Enemy } from './enemy';
 
 export class Projectile extends CollisionObject 
 {
+    private playerDamage : number = 1;
     private wind : Wind;
     private scaleSpeed : number = 0.75;
     
@@ -81,15 +85,19 @@ export class Projectile extends CollisionObject
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
     {
-        if(!this.visible || sprite2 == null || sprite1 == null || sprite2 instanceof Projectile) { return; }
-        
-        console.log("collision of: " + sprite1.key +  " and " + sprite2.key);
+        // TODO Should be better to solve with sth like collision layers
+        if(!this.visible ||  sprite1 == null || 
+            sprite2 instanceof Projectile)
+         { return; }
 
-        // TODO replace with enemy
-        if(sprite2.key.toString().toLowerCase().includes('walltile'))
+
+        // TODO Replace magic constant for fast falling projectiles
+        if(sprite2 instanceof Cannon && this.body.velocity.y > 150)
         {
-            sprite2.destroy();
+            this.game.camera.shake(0.02, 100);
+            PlayerInfo.causeDamage(this.playerDamage);
         }
+        else { return; }
 
         this.explode();
     }

@@ -2,13 +2,14 @@ import Phaser from 'phaser-ce';
 import { CollisionObject } from './collisionObject';
 import {Projectile} from '../prefabs/projectile';
 import { PlayerInfo } from '../playerInfo';
+import { Config } from '../config';
+import { Cannon } from './cannon';
 
 export class Enemy extends CollisionObject
 {
     private playerDamage : number = 2;
     private target : Phaser.Point;
     private speed : number;
-    private distThreshold : number = 10.0;
 
     constructor(game: Phaser.Game, x : number, y : number, target : Phaser.Point, speed : number)
     {
@@ -25,16 +26,11 @@ export class Enemy extends CollisionObject
     public update() : void
     {
         let tmp : Phaser.Point = new Phaser.Point(this.target.x, this.target.y);
-        let d2t : Phaser.Point = tmp.subtract(this.x, this.y).normalize();
+        tmp.subtract(this.x, this.y);
+        let d2t : Phaser.Point = new Phaser.Point(tmp.x, tmp.y).normalize();
 
         this.body.velocity.x = d2t.x * this.speed;
         this.body.velocity.y = d2t.y * this.speed;
-
-        if(Phaser.Math.distance(this.target.x, this.target.y, this.x, this.y) < this.distThreshold)
-        {
-            PlayerInfo.causeDamage(this.playerDamage);
-            this.destroy();
-        }
     }
 
     protected onCollisionEnter(sprite1 : Phaser.Sprite, sprite2 : Phaser.Sprite) : void
@@ -44,6 +40,13 @@ export class Enemy extends CollisionObject
         if(sprite2 instanceof Projectile)
         {
             ++PlayerInfo.score;
+            this.destroy();
+        }
+        else if(sprite2 instanceof Cannon)
+        {
+            this.game.camera.shake(0.02, 100);
+            PlayerInfo.causeDamage(this.playerDamage);
+            this.destroy();
         }
     } 
 

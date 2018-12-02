@@ -2,6 +2,7 @@ import Phaser from 'phaser-ce';
 import {Cannon} from './cannon';
 import {Human} from '../prefabs/human';
 import {Projectile} from '../prefabs/projectile';
+import { CollisionManager } from './collisionManager';
 
 const INITIAL_PEOPLE_COUNT = 1000;
 
@@ -25,10 +26,11 @@ export class City extends Phaser.Sprite {
         this.body.allowGravity = false;
     }
 
-    public prepareCity(): void {
+    public prepareCity(collMan : CollisionManager): void {
         const cannonOffsetY = 100;
         this.cannon = new Cannon(this.game, this.x, this.y + cannonOffsetY);
         this.game.add.existing(this.cannon);
+        collMan.add(this.cannon);
 
         const textOffset = 150;
         //this.peopleCountText = this.game.add.text(this.x, this.y - textOffset, ``);
