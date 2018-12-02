@@ -44,8 +44,6 @@ export class Enemy extends CollisionObject
         if(sprite2 instanceof Projectile)
         {
             ++PlayerInfo.score;
-
-            console.log(PlayerInfo.score);
         }
     } 
 

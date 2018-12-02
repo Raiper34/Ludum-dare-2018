@@ -9,7 +9,7 @@ export class City extends Phaser.Sprite {
 
     public cannon: Cannon;
     private peopleCount: number = INITIAL_PEOPLE_COUNT;
-    private peopleCountText: Phaser.Text;
+    //private peopleCountText: Phaser.Text;
 
     constructor(game: Phaser.Game, x: number, y: number) {
         super(game, x, y, 'city');
@@ -31,14 +31,14 @@ export class City extends Phaser.Sprite {
         this.game.add.existing(this.cannon);
 
         const textOffset = 150;
-        this.peopleCountText = this.game.add.text(this.x, this.y - textOffset, ``);
-        this.peopleCountText.anchor.set(0.5);
+        //this.peopleCountText = this.game.add.text(this.x, this.y - textOffset, ``);
+        //this.peopleCountText.anchor.set(0.5);
         this.setPeopleCount(INITIAL_PEOPLE_COUNT);
     }
 
     public setPeopleCount(peopleCount: number): void {
         this.peopleCount = peopleCount;
-        this.peopleCountText.text = `People: ${this.peopleCount}`
+        //this.peopleCountText.text = `People: ${this.peopleCount}`
     }
 
     public getPeopleCount(): number {

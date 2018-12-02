@@ -21,7 +21,7 @@ export class Game extends Phaser.State {
     private wind : Wind;
     private projectileGen : ProjectileGenerator;
     private clouds : Array<Cloud>;
-    private wallTiles : Array<WallTile>;
+    //private wallTiles : Array<WallTile>;
     private enemySpawners : Array<EnemySpawner>;
     private cursors: Phaser.CursorKeys;
     private spaceKey: Phaser.Key;
@@ -29,7 +29,9 @@ export class Game extends Phaser.State {
     private background: Background;
     private city : City;
     private cloudBackground: Phaser.TileSprite;
-    private changeTurnText: Phaser.Text;
+    private scoreText : Phaser.BitmapText;
+    private healthText : Phaser.BitmapText;
+    //private changeTurnText: Phaser.Text;
 
     public create(): void {
         this.initializeWorld();
@@ -72,6 +74,18 @@ export class Game extends Phaser.State {
             this.city.cannon.fire(this.projectileGen);
             //this.game.camera.follow(this.projectile);
         }, this);
+ 
+
+        // INIT GUI
+        // ========
+
+        this.healthText = this.game.add.bitmapText(25, 25, 'carrier_command','', 24);
+        this.healthText.fixedToCamera = true;
+
+        this.scoreText = this.game.add.bitmapText(25, 60, 'carrier_command','', 24);
+        this.scoreText.fixedToCamera = true;
+
+        this.updateGUI();
     }
     
 
@@ -84,23 +98,13 @@ export class Game extends Phaser.State {
         });
 
         this.controlCannon();
+        this.updateGUI();
     }
 
-    private createWallTower(minX : number, maxX : number, minY : number, maxY : number, minTiles : number, maxTiles : number) : Array<WallTile>
+    private updateGUI()
     {
-        let tower : Array<WallTile> = new Array<WallTile>();
-        let count : number = Math.floor(Phaser.Math.random(minTiles, maxTiles));
-        let xPos = Phaser.Math.random(minX, maxX);
-        let yPos = Phaser.Math.random(minY, maxY);
-
-        let spriteHeight : number = 0;
-        for(let i : number = 0; i < count; ++i)
-        {
-            tower.push(new WallTile(this.game, xPos, yPos - i * spriteHeight, i != 0));
-            spriteHeight = tower[0].height;
-        }
-
-        return tower;
+        this.healthText.text = 'Health: ' + PlayerInfo.health;
+        this.scoreText.text = 'Score: ' + PlayerInfo.score;
     }
 
     private controlCannon(): void {
@@ -128,10 +132,10 @@ export class Game extends Phaser.State {
 
         this.camera.follow(this.city);
 
-        this.changeTurnText = this.game.add.text(0,0);
+        /*this.changeTurnText = this.game.add.text(0,0);
         this.changeTurnText.fixedToCamera = true;
         this.changeTurnText.cameraOffset.setTo(this.game.world.camera.width / 2, this.game.world.camera.height / 2);
-        this.changeTurnText.anchor.setTo(0.5);
+        this.changeTurnText.anchor.setTo(0.5);*/
 
         this.cloudBackground = this.game.add.tileSprite(0, 0, this.background.getBounds().right, this.game.world.camera.height, 'cloud_background');
         this.cloudBackground.tileScale.y = 2.0;
