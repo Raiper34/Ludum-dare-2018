@@ -3,6 +3,8 @@ import {Player} from './player.enum';
 import {Human} from './human';
 import {Projectile} from './projectile';
 
+// NOTE Still ready for two players. No time to clean
+
 const DEFAULT_ANGLE = 0;
 const ROTATION_SPEED = 5;
 

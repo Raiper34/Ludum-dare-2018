@@ -24,8 +24,8 @@ export class Enemy extends CollisionObject
         let tmp : Phaser.Point = new Phaser.Point(this.target.x, this.target.y);
         let d2t : Phaser.Point = tmp.subtract(this.x, this.y).normalize();
 
-        this.body.velocity.x += d2t.x * this.speed * this.game.time.physicsElapsed;
-        this.body.velocity.y += d2t.y * this.speed * this.game.time.physicsElapsed;
+        this.body.velocity.x = d2t.x * this.speed;
+        this.body.velocity.y = d2t.y * this.speed;
 
         if(Phaser.Math.distance(this.target.x, this.target.y, this.x, this.y) < this.distThreshold)
         {
